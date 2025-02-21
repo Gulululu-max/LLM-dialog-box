@@ -1,26 +1,34 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <ChatBox/>
+  
+  <Home></Home>
+
 </template>
 
 <script>
-import ChatBox from './components/ChatBox.vue';
+import Home from './views/Home.vue';
 
 export default {
   name: 'App',
   components: {
-    ChatBox
+    Home,
   }
 }
 </script>
+<style scoped>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 </style>
+<!-- html, body {
+  height: 100%;
+  /* margin: 0; */
+  margin-top: 10px;
+  margin-bottom: 10px;
+  display: flex;
+}
+
+#app {
+  height: 100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+} -->
