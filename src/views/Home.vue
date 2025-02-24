@@ -24,25 +24,17 @@ export default {
   
 <style scoped>
 .contanier{
-    display: flex;
-    flex-direction: column;
+    /* display: flex;
+    flex-direction: column; */
     height: 100vh;
 }
-.chat-frame{
+/* .chat-frame{
     height: 85vh;
 }
 .input-frame{
     height: 15VH;
 
-}
+} */
 
-  /* #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
-  } */
 </style>
   

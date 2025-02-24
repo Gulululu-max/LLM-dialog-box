@@ -1,13 +1,19 @@
 <template>
     <div class="input-container">
-       <el-input v-model="input" class="custom-textarea" type="textarea" :rows="5" maxlength="5000" show-word-limit placeholder="请输入..." 
-       @keyup.enter="send" />
-       <div class="button-group">
+        <div class="button-group">
           <el-button type="primary" size="small" @click="send" :disabled="input.trim() === ''">
-            <el-icon><Search /></el-icon>发送
+            发送
+            <!-- <el-icon><Search /></el-icon> -->
           </el-button>
-          <el-upload>上传</el-upload>
+          <el-button type="primary" size="small">
+            上传<el-icon class="el-icon--right"><Upload /></el-icon>
+          </el-button>
        </div>
+       <el-input v-model="input" class="custom-textarea" type="textarea" :rows="5" maxlength="5000" show-word-limit placeholder="请输入..." 
+         @keydown="handleKeydown" />
+       <!-- <div>
+         
+       </div> -->
   </div>
 </template>
 
@@ -29,9 +35,14 @@ export default {
   //尝试vue3写法
   setup(props, {emit}){
     const input = ref('');
-    // const isSendDisabled = computed(() => {
-    //   return input.value.trim() === '';//trim方法去除字符串两端的空白字符后检查是否为空
-    // })
+    const handleKeydown = (event) => {
+      if (event.shiftKey && event.key === 'Enter') {//Shift+enter换行
+        input.value += '\n';
+        event.preventDefault();
+      } else if (event.key === 'Enter') {
+        send();
+      }
+    };
     const send = () => {
       emit('send', {input: input.value, content_type: 'text'});
       input.value = '';
@@ -39,6 +50,7 @@ export default {
 
     return{
       input,
+      handleKeydown,
       send
     };
 
@@ -50,17 +62,20 @@ export default {
 .input-container {
   display: flex;
   width: 100%;
+  align-items: center;
+  flex-direction: column;
+
 }
 .custom-textarea {
   width: 800px;
-  flex-direction: row;
-  justify-content: center;
+  margin-top: 10px;
+  
 }
 .button-group{
-  position: absolute;
-  display: flex;
+  /* position: absolute; */
+  /* display: flex; */
   right: 10px;
   bottom: 10px;
-  gap: 8px; /* 按钮之间的距离 */
+  gap: 1px; /* 按钮之间的距离 */
 }
 </style>
