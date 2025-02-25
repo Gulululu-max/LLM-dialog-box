@@ -32,6 +32,15 @@ export default {
     const timeId = ref(null);
     const isLoading = ref(props.message.role === 'assistant' && props.message.isNew === true);
 
+    // const scrollToBottom = () => {
+    //  const container = document.querySelector('.message-list');
+    //  console.log("进入scrollHeight")
+    //  if (container) {
+    //   console.log("scrollHeight整个容器的高度:", container.scrollHeight)
+    //   container.scrollTop = container.scrollHeight;
+    //  }
+    // };
+
     const startTypingEffect = (content) => {
       if (timeId.value) {
         clearInterval(timeId.value);
@@ -166,10 +175,10 @@ export default {
   margin: 10px 0;
   padding: 10px 15px; /* 上下 10px，左右 15px */
   border-radius: 12px;
-  height:auto;
+  height: auto;
   min-height: 40px;
-  max-width: 80%;
-  min-width: 200px;
+  max-width: 70%;
+  min-width: 100px;
   width: fit-content;
   background-color: aquamarine;
   font-size: 16px;

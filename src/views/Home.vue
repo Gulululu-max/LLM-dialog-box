@@ -1,22 +1,19 @@
 <template>
     <div class = "contanier">
-        <ChatBox></ChatBox>
-        <!-- <div class = "chat-frame">
-            <img alt="Vue logo" src="../assets/logo.png">
-        </div>
-        <div class = "input-frame">
-            
-        </div> -->
+        <SideBar class="sidebar"></SideBar>
+        <ChatBox class="chat-box"></ChatBox>
     </div>
     
 </template>
   
 <script>
 import ChatBox from '../components/ChatBox.vue';
+import SideBar from '../components/SideBar.vue';
   
 export default {
     name: 'Home',
     components: {
+      SideBar,
       ChatBox
     }
 }
@@ -24,17 +21,19 @@ export default {
   
 <style scoped>
 .contanier{
-    /* display: flex;
-    flex-direction: column; */
+    display: flex;
     height: 100vh;
 }
-/* .chat-frame{
-    height: 85vh;
+.sidebar{
+    max-width: 250px;
+    background-color: #f5f5f5; 
+    border-right: 1px solid #ddd; /* 侧边栏右边框 */
+    overflow-y: auto; 
 }
-.input-frame{
-    height: 15VH;
-
-} */
-
+.chat-box {
+  flex: 1; /* 占据剩余空间 */
+  /* display: flex;
+  flex-direction: column; */
+}
 </style>
   

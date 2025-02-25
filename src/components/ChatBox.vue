@@ -1,6 +1,6 @@
 <template>
   <div class="chat-box-container">
-    <div class="message-list">
+    <div class="message-list" ref="messageList">
       <Message v-for="(msg, index) in messages" :key="index" :message="msg"/>
     </div>   
     <InputBox class="input-box" @send="handleSend"/>
@@ -8,7 +8,7 @@
   </div>
 </template>
 <script>
-import {ref, onMounted} from 'vue';
+import {ref, onMounted, watch} from 'vue';
 import Message from './Message.vue';
 import InputBox from './InputBox.vue';
 //import axios from 'axios';
@@ -28,17 +28,18 @@ export default {
     },
     setup(){
       const messages = ref(JSON.parse(localStorage.getItem('messages')) || []);//data
+      //const messageList = ref(null);
       //console.log("messages:", messages);
 
-      onMounted(() => {
-      // 标记所有加载的消息为旧消息
-        messages.value.forEach(message => {
-          message.isNew = false;
-        });
-        //saveMessages();
-      });
+      
+
 
       //方法
+      // const lastMessageLength = computed(() => {
+      // const lastMessage = messages.value[messages.value.length - 1];
+      // return lastMessage ? lastMessage.content.length : 0;
+      // });
+
       const handleSend = async(content) => {
       try {
     // 将用户的消息添加到消息列表中
@@ -110,8 +111,10 @@ export default {
             assistantMessage = { ...assistantMessage, content: assistantMessage.content + eventData.content };
             // 替换最后一个消息
             messages.value.splice(messages.value.length - 1, 1, assistantMessage);
-            saveMessages();
             scrollToBottom();
+            saveMessages();
+            
+            
           }else if(eventType === 'conversation.chat.completed' || eventType === 'done'){
             console.log('流式传输结束');
             condition = false;
@@ -120,9 +123,12 @@ export default {
             assistantMessage = { ...assistantMessage, content: assistantMessage.content + eventData.last_error.msg};
             // 替换最后一个消息
             messages.value.splice(messages.value.length - 1, 1, assistantMessage);
+            scrollToBottom();
             saveMessages();
+            console.log("22222222222222222");
           }
         }
+        //scrollToBottom();
       }
     } 
   } catch (error) {
@@ -134,13 +140,39 @@ export default {
       localStorage.setItem('messages', JSON.stringify(messages.value));
     };
 
+    // const scrollToBottom = () => {
+    //   const container = messageList.value;
+    //   if (container) {
+    //     container.scrollTop = container.scrollHeight;
+    //   }
+    // };
     const scrollToBottom = () => {
-      const container = document.querySelector('.message-list');
-      if (container) {
-        container.scrollTop = container.scrollHeight;
-      }
+     const container = document.querySelector('.message-list');
+     console.log("进入scrollHeight")
+     if (container) {
+      console.log("scrollHeight整个容器的高度:", container.scrollHeight)
+      container.scrollTop = container.scrollHeight;
+     }
     };
 
+    onMounted(() => {
+      // 标记所有加载的消息为旧消息
+        messages.value.forEach(message => {
+          message.isNew = false;
+        });
+        //scrollToBottom();
+        //saveMessages();
+      });
+
+      watch(messages, () => {
+      scrollToBottom();
+      console.log("1111111111111111111")
+      }, { deep: true });
+      // watch(messages,()=>{
+        
+      //     scrollToBottom();
+     
+      //  })
     return {
       messages,
       handleSend,
@@ -167,6 +199,7 @@ html, body {
   flex: 1; /* 占据剩余空间 */
   overflow-y: auto; /* 允许内容滚动 */
   padding: 10px; 
+  height: calc(100vh - 20%); /* 确保高度足够 */
 }
 .input-box{
   height: 20%;
