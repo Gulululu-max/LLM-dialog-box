@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # llm-web
 
 ## Project setup
@@ -32,7 +31,5 @@ npm install axios element-plus
 - vue3
 - Axios
 - Element Plus
-=======
 # LLM_Web
 Mading a LLM chat compoent
->>>>>>> 306997775f5410169ea5051704be837d402102d5

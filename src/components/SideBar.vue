@@ -8,14 +8,12 @@
             <img src="@/assets/logo.png" alt="图标" class="icon" />
           </div>
         </el-tooltip>
-  
         <!-- 第二个图标：展开/收起侧边栏 -->
         <div class="icon-wrapper" @click="toggleSidebar">
           <el-icon :size="24">
             <component :is="isSidebarExpanded ? 'Fold' : 'Expand'" />
           </el-icon>
         </div>
-  
         <!-- 第三个图标：新增会话 -->
         <div class="icon-wrapper" @click="addNewSession">
           <el-icon :size="24">
@@ -23,7 +21,6 @@
           </el-icon>
         </div>
       </div>
-  
       <!-- 展开的侧边栏内容 -->
       <div class="sidebar-content" :class="{ expanded: isSidebarExpanded }">
         <!-- 收起按钮 -->
@@ -32,7 +29,6 @@
             <ArrowLeft />
           </el-icon>
         </div>
-  
         <!-- 历史会话框 -->
         <div class="history-sessions">
           <div v-for="session in sessions" :key="session.id" class="session-item">
@@ -66,7 +62,7 @@
     setup() {
       const store = useStore();
       const isSidebarExpanded = ref(false); // 控制侧边栏展开/收起
-      const sessions = computed(() => store.state.sessions); // 从 Vuex 中获取历史会话
+      const sessions = computed(() => store.state.sessions);
   
       // 切换侧边栏展开/收起
       const toggleSidebar = () => {
@@ -75,7 +71,7 @@
   
       // 新增会话
       const addNewSession = () => {
-        store.dispatch('addSession'); // 调用 Vuex action
+        store.dispatch('addSession');
         ElMessage.success('新增会话成功！');
       };
   
@@ -86,7 +82,7 @@
       };
 
       const deleteSession = (sessionId) => {
-        store.dispatch('deleteSession', sessionId); // 调用 Vuex action
+        store.dispatch('deleteSession', sessionId);
         ElMessage.success('删除会话成功！');
       };
 
