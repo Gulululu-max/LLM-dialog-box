@@ -5,9 +5,12 @@
             发送
             <!-- <el-icon><Search /></el-icon> -->
           </el-button>
-          <el-button type="primary" size="small">
-            上传<el-icon class="el-icon--right"><Upload /></el-icon>
-          </el-button>
+          <el-tooltip content="仅支持上传文件与图片" placement="top">
+            <el-button type="primary" size="small">
+            上传
+              <el-icon class="el-icon--right"><Upload /></el-icon>
+             </el-button>
+          </el-tooltip>
        </div>
        <el-input v-model="input" class="custom-textarea" type="textarea" :rows="5" maxlength="5000" show-word-limit placeholder="请输入..." 
          @keydown="handleKeydown" />

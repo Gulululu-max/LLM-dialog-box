@@ -4,21 +4,15 @@
       <Message v-for="(msg, index) in messages" :key="index" :message="msg"/>
     </div>   
     <InputBox class="input-box" @send="handleSend"/>
-    <!-- <div class = "chat-box"></div> -->
   </div>
 </template>
 <script>
-import {ref, onMounted, watch} from 'vue';
+import {computed, onMounted, watch} from 'vue';
+import { useStore } from 'vuex';
 import Message from './Message.vue';
 import InputBox from './InputBox.vue';
 //import axios from 'axios';
 import {RoleType} from '@coze/api';//CozeAPI, COZE_COM_BASE_URL,
-// 初始化客户端，使用个人访问令牌
-// const client = new CozeAPI({
-//   token: 'pat_Qa4oY8TFgwHLiNuM8foptxbLkez12qHgK33j90f861fc5MITbgHm5sjDvgQVRzPB', 
-//   baseURL: COZE_COM_BASE_URL,// 设置为 COZE_COM_BASE_URL 表示使用 Coze.com 的 API 服务器
-//   allowPersonalAccessTokenInBrowser: true,
-// });
 
 export default {
     name: 'ChatBox',
@@ -27,29 +21,24 @@ export default {
         InputBox
     },
     setup(){
-      const messages = ref(JSON.parse(localStorage.getItem('messages')) || []);//data
-      //const messageList = ref(null);
-      //console.log("messages:", messages);
-
+      const store = useStore();
+      const currentSession = computed(() => store.getters.currentSession);
+      const messages = computed(() => currentSession.value ? currentSession.value.messages : []); // 从 Vuex 中获取 messages
       
-
-
-      //方法
-      // const lastMessageLength = computed(() => {
-      // const lastMessage = messages.value[messages.value.length - 1];
-      // return lastMessage ? lastMessage.content.length : 0;
-      // });
-
       const handleSend = async(content) => {
       try {
+        // 确保有一个当前会话
+        if(!store.state.currentSessionId){
+          store.dispatch('addSession');
+        }
     // 将用户的消息添加到消息列表中
-    messages.value.push({
+    store.commit('ADD_MESSAGE', {
       role: 'user',
       content: content.input,
       content_type: content.content_type || 'text', // 默认类型为文本
       isNew: true,
     });
-    saveMessages();
+    //saveMessages();
     //占位符消息支持流式内容
     let assistantMessage = {
       role: 'assistant',
@@ -57,8 +46,8 @@ export default {
       content_type: 'text',
       isNew: true,
     };
-    messages.value.push(assistantMessage);
-    saveMessages();
+    store.commit('ADD_MESSAGE', assistantMessage);
+    //saveMessages();
     // 发送消息并处理响应
     const response = await fetch('https://api.coze.com/v3/chat', {
       method: 'POST',
@@ -79,7 +68,7 @@ export default {
     });
     if (!response.ok) {//响应失败
           throw new Error(`响应失败! 状态: ${response.status}`);
-        }
+    }
     //实现流式读取
     const reader = response.body.getReader();//创建一个读取器
     const decoder = new TextDecoder('utf-8');
@@ -110,9 +99,9 @@ export default {
             // 尝试重新分配对象希望能触发响应性更新
             assistantMessage = { ...assistantMessage, content: assistantMessage.content + eventData.content };
             // 替换最后一个消息
-            messages.value.splice(messages.value.length - 1, 1, assistantMessage);
+            store.commit('UPDATE_LAST_MESSAGE', assistantMessage);
             scrollToBottom();
-            saveMessages();
+            //saveMessages();
             
             
           }else if(eventType === 'conversation.chat.completed' || eventType === 'done'){
@@ -122,10 +111,8 @@ export default {
           }else if(eventType === 'conversation.chat.failed'){
             assistantMessage = { ...assistantMessage, content: assistantMessage.content + eventData.last_error.msg};
             // 替换最后一个消息
-            messages.value.splice(messages.value.length - 1, 1, assistantMessage);
+            store.commit('UPDATE_LAST_MESSAGE', assistantMessage);
             scrollToBottom();
-            saveMessages();
-            console.log("22222222222222222");
           }
         }
         //scrollToBottom();
@@ -134,23 +121,12 @@ export default {
   } catch (error) {
     console.error('返回错误', error);
   }
-      };
-
-      const saveMessages = () => {
-      localStorage.setItem('messages', JSON.stringify(messages.value));
-    };
-
-    // const scrollToBottom = () => {
-    //   const container = messageList.value;
-    //   if (container) {
-    //     container.scrollTop = container.scrollHeight;
-    //   }
-    // };
-    const scrollToBottom = () => {
+};
+     const scrollToBottom = () => {
      const container = document.querySelector('.message-list');
-     console.log("进入scrollHeight")
+     //console.log("进入scrollHeight")
      if (container) {
-      console.log("scrollHeight整个容器的高度:", container.scrollHeight)
+      //console.log("scrollHeight整个容器的高度:", container.scrollHeight)
       container.scrollTop = container.scrollHeight;
      }
     };
@@ -166,18 +142,12 @@ export default {
 
       watch(messages, () => {
       scrollToBottom();
-      console.log("1111111111111111111")
+      //console.log("1111111111111111111")
       }, { deep: true });
-      // watch(messages,()=>{
-        
-      //     scrollToBottom();
-     
-      //  })
+      
     return {
       messages,
       handleSend,
-      //saveMessages,
-      //scrollToBottom
     };
     }
 }
