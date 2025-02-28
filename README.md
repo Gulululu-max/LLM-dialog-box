@@ -29,7 +29,7 @@ npm install axios element-plus
 ```
 
 - vue3
-- Axios
+- Fetch
 - Element Plus
-# LLM_Web
-Mading a LLM chat compoent
+# LLM-dialog-box
+LLM dialog box compoent
