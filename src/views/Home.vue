@@ -31,7 +31,7 @@ export default {
     overflow-y: auto; 
 }
 .chat-box {
-  flex: 1; /* 占据剩余空间 */
+  flex: 1; 
   /* display: flex;
   flex-direction: column; */
 }
